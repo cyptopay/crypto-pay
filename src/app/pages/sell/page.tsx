@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { Inter, Noto_Sans } from 'next/font/google';
 import { useRouter } from 'next/navigation';
-import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 
 // Font configuration using next/font
 const inter = Inter({
@@ -68,6 +67,7 @@ const PaymentMethod = ({ label, name, defaultChecked = false }: any) => (
 // --- Main Page Component ---
 export default function CoinPayPage() {
     const [activeTab, setActiveTab] = useState('Buy');
+
     const router = useRouter();
 
     const cryptoOptions = [
@@ -82,27 +82,6 @@ export default function CoinPayPage() {
         { value: "BEP20", label: "BEP20" },
     ];
 
-      const config = {
-    public_key: "FLWPUBK_TEST-8512a05d11835b32e2d9b1295213352c-X",
-    tx_ref: Date.now().toString(),
-    amount: 10,
-    currency: "USD",
-    payment_options:
-      "card,mobilemoney,ussd,banktransfer,barter,visaqrcode,masterpassqrcode,bankaccount",
-    customer: {
-      email: `Charles@gmail.com`,
-      phone_number: '0540656226',
-      name: `Charles`,
-    },
-    customizations: {
-      title: "Buy Crypto ",
-      description: "Payments for crypto",
-      logo: "",
-    },
-  };
-
-  const handleFlutterPayment = useFlutterwave(config);
-
     return (
         <div className={`${inter.variable} ${notoSans.variable} font-sans relative flex size-full min-h-screen flex-col bg-white`}>
             {/* --- Header --- */}
@@ -110,23 +89,24 @@ export default function CoinPayPage() {
                 <Logo />
                 <nav className="flex items-center gap-9">
                     <button 
-                        onClick={() => setActiveTab('Buy')}
-                        className={`text-blue-700 text-sm cursor-pointer font-medium leading-normal transition-colors`}
+                        onClick={() => {
+                            router.push('/')
+                            setActiveTab('Buy')
+                        }}
+                        className={`text-black text-sm cursor-pointer font-medium leading-normal transition-colors`}
                     >
                         Buy
                     </button>
                     <button 
-                        onClick={() => {
-                          setActiveTab('Sell')
-                          router.push('/pages/sell')
-                        }}
-                        className={`text-gray-700 text-sm cursor-pointer font-medium leading-normal transition-colors`}
+                        onClick={() => setActiveTab('Sell')}
+                        className={`text-sm cursor-pointer font-medium leading-normal transition-colors text-blue-600`}
                     >
                         Sell
                     </button>
                      <button 
                         onClick={() => {
-                          router.push('/pages/contact')
+                            router.push('/')
+                            setActiveTab('Buy')
                         }}
                         className={`text-black text-sm cursor-pointer font-medium leading-normal transition-colors`}
                     >
@@ -139,7 +119,7 @@ export default function CoinPayPage() {
             <main className="flex-1 px-4 sm:px-10 py-10 flex justify-center bg-gray-50/50">
                 <div className="w-full max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 md:p-8">
                     <h2 className="text-gray-900 text-3xl font-bold text-center mb-8">
-                        Buy Crypto
+                        Sell Crypto
                     </h2>
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -151,26 +131,17 @@ export default function CoinPayPage() {
                             <FormInput label="Full Name" placeholder="Enter your name" />
                             <FormInput label="Email" placeholder="Enter your email" type="email" />
                         </div>
-                        {/* <div>
+                        <div>
                             <h3 className="text-gray-900 text-lg font-bold mb-4 mt-6">Payment method</h3>
                             <div className="flex flex-col sm:flex-row flex-wrap gap-4">
-                                <PaymentMethod label="Mobile Money" name="payment_method" defaultChecked />
+                                {/* <PaymentMethod label="Mobile Money" name="payment_method" defaultChecked /> */}
                                 <PaymentMethod label="Bank transfer" name="payment_method" />
-                                <PaymentMethod label="Pay with card" name="payment_method" />
+                                {/* <PaymentMethod label="Pay with card" name="payment_method" /> */}
                             </div>
-                        </div> */}
+                        </div>
                         <div className="pt-6">
-                            <button 
-                              onClick={() => {
-                                 handleFlutterPayment({
-                                  callback: async (response) => {
-                                    closePaymentModal(); 
-                                  },
-                                  onClose: () => {},
-                                });
-                              }}
-                              className="flex min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-md h-12 px-5 bg-blue-600 text-white text-base font-bold leading-normal tracking-[0.015em] transition-colors">
-                                <span className="truncate">Continue to payment</span>
+                            <button className="flex min-w-[84px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-md h-12 px-5 bg-blue-600 text-white text-base font-bold leading-normal tracking-[0.015em] transition-colors">
+                                <span className="truncate">Continue</span>
                             </button>
                         </div>
                     </div>
